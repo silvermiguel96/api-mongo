@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const saltRounds = 6;
 
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
@@ -22,6 +24,11 @@ const UserSchema = new Schema({
     trim: true,
     required: true,
   },
+});
+
+UserSchema.pre("save", function (next) {
+  this.password = bcrypt.hashSync(this.password, saltRounds);
+  next();
 });
 
 module.exports = mongoose.model("User", UserSchema);

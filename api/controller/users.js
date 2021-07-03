@@ -23,4 +23,23 @@ module.exports = {
       }
     );
   },
+
+  login: async function (required, response) {
+    const email = required.body.email;
+    const password = required.body.password;
+
+    //await MyModel.find({ name: 'john', age: { $gte: 18 } }).exec();
+    const UserDatabase = await UserModel.find({email: email}).exec();
+
+    if (!UserDatabase.length) {
+      response.status(404).json({message: "no se encontro el usuario"});
+    }
+
+    if (password === UserDatabase[0].password) {
+      console.log(UserDatabase);
+      response.json(UserDatabase);
+    } else {
+      response.status(404).json({message: "no se ha encontrado usuario y/o contraseña"});
+    }
+  }
 };
